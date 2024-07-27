@@ -6,11 +6,14 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
@@ -21,12 +24,38 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            App()
+            ListComposable()
+
         }
     }
 }
 
 
+@Composable
+fun ListComposable() {
+    val categoryState = remember { mutableStateOf(emptyList<String>()) }
+
+    LaunchedEffect(key1 = Unit) {
+        categoryState.value = fetchCategory()
+
+    }
+
+    LazyColumn {
+        items(categoryState.value) { item ->
+            Text(text = item)
+
+        }
+    }
+
+}
+
+fun fetchCategory(): List<String> {
+
+    return listOf("One", "Two", "Three")
+
+}
+
+/*
 @Composable
 fun App() {
 
@@ -50,3 +79,6 @@ fun App() {
     }
 
 }
+ */
+
+
