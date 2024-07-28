@@ -2,10 +2,12 @@ package com.example.blogapp
 
 import android.os.Bundle
 import android.util.Log
+import android.view.ViewTreeObserver
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -13,13 +15,18 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import com.example.blogapp.ui.theme.BlogAppTheme
 import kotlinx.coroutines.delay
 
@@ -28,11 +35,34 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
 
-            App()
+            KeyBordComposable()
+            TextField(value = "", onValueChange = {})
         }
     }
 }
 
+@Composable
+fun KeyBordComposable() {
+
+    val view = LocalView.current
+    DisposableEffect(key1 = Unit) {
+        val listener = ViewTreeObserver.OnGlobalLayoutListener {
+            val insert = ViewCompat.getRootWindowInsets(view)
+            val isKeyBordVisible = insert?.isVisible(WindowInsetsCompat.Type.ime())
+            Log.d("SN", isKeyBordVisible.toString())
+        }
+
+        view.viewTreeObserver.addOnGlobalLayoutListener(listener)
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(listener)
+        }
+
+    }
+
+}
+
+
+/*
 
 @Composable
 fun App() {
